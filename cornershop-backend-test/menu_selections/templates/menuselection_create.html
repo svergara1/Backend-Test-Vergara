@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+Today's menu:
+<h1>{{ menu.menu_date }}</h1>
+<table>
+    <tr>
+        <th>Options:</th>
+
+    </tr>
+    {% for i in menuoption %}
+    <tr>
+        <td> {{ i.description }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<div style='margin-top:30px;'></div>
+<form action="." method="POST">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+</div>
+
+{% endblock %}

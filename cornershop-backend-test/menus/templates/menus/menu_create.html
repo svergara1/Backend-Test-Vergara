@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Select menu date</h1>
+<div>{{ object.uuid }}</div>
+<div style='margin-top:30px;'></div>
+<form action="." method="POST">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save" />
+</form>
+</div>
+
+{% endblock %}

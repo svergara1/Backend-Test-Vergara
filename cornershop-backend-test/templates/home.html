@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<h1>Welcome</h1>
+{% if todays_menu %}
+<button class="ml-2"> <a style="color:black" href="{% url 'menus:menu-detail' todays_menu.id %}">Update today's
+        menu</a></button>
+<div>
+    <button class="ml-2"> <a class="ml-2" style="color:black"
+            href="{% url 'menus:send-slack-message' todays_menu.uuid %}">
+            Send slack message </a></button>
+</div>
+{% else %}
+<div>
+    <button class="ml-2"> <a class="ml-2" style="color:black" href="{% url 'menus:menu-create' %}"> Create today's menu
+        </a></button>
+</div>
+{% endif %}
+<div>
+    <button class="ml-2"> <a class="ml-2" style="color:black" href="{% url 'menus:menu-list' %}"> See past menus
+        </a></button>
+</div>
+<div>
+    <button class="ml-2"> <a class="ml-2" style="color:black" href="{% url 'menuselections:menuselection-todaylist' %}">
+            See
+            today's menu selections </a></button>
+</div>
+{% else %}
+<div>Are you Nora? <a class="nav-item nav-link" href="{% url 'login' %}">Login</a></div>
+{% if todays_menu and can_still_order_by_time %}
+<div>Are you an Employee? <a class="nav-item nav-link"
+        href="{% url 'menuselections:menuselection-create' todays_menu.uuid %}">Select
+        today's
+        menus</a>
+</div>
+{% else %}
+<div>Nothing to order here.</div>
+{% endif %}
+
+
+
+{% endif %}
+{% endblock %}

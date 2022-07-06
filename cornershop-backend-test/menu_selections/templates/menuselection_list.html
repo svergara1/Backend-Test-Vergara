@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<h2>Menus requested today</h2>
+<div class="border-top border-bottom pt-3 pb-3">
+    <medium class="text-muted">
+        {% for i in object_list %}
+        <p class="ml-2"> <a href="{{ i.get_absolute_url }}">{{ i.employee_firstname }} {{ i.employee_lastname }}
+                selected option: {{ i.selection }}</a></p>
+        {% endfor %}
+    </medium>
+</div>
+<div>
+
+    {% endblock %}

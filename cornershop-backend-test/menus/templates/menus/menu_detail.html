@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>{{ object.uuid }}</h1>
+<h1>{{ object.menu_date }}</h1>
+<h1>{{ object.id }}</h1>
+<button class="ml-2"> <a class="ml-2" style="color:black" href="{% url 'menus:menuoption-create' object.id %}"> Add
+        option </a></button>
+
+<table>
+    <tr>
+        <th>Option</th>
+        <th>Edit</th>
+        <th>Delete</th>
+
+    </tr>
+    {% for i in menuoptions %}
+    <tr>
+        <td>{{ i.description }}</td>
+        <td><button class="ml-2"> <a class="ml-2" style="color:black" href="{% url 'menus:menuoption-update' i.id %}">
+                    Edit </a></button></td>
+        <td><button class="ml-2"> <a class="ml-2" style="color:black" href="{% url 'menus:menuoption-delete' i.id %}">
+                    Delete </a></button></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
