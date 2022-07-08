@@ -1,58 +1,69 @@
-# Cornershop's Backend Test 
+# Cornershop Backend Test
 
-This technical test requires the design and implementation (using Django and Celery) of a management system to coordinate the meal delivery for Cornershop employees.
+### Assumptions
 
-We provide a nice boilerplate project with Django and Celery up and running so you can use your time more wisely.
+* Nora is the only user that needs to be authenticated to the system.
+* Nora con create as many menu options as she wants per Menu, as well as edit and delete them if necessary.
+* Nora can send the slack message with today's menus as many times as she wants to the employees slack channel.
+* Employees are not required to have an account in order to select a menu option.
+* Employees can't order if it's past 11 AM CL time nor if Nora hasn't created today's menu.
 
-## After you finish your test please share this repository with: @Cornershop-hr @Alecornershop @roherrera @stichy23
+### Follow these steps for set-up
+* Clone the repository
+* cd cornershop-backend-test
+* `make up`
+* `dev up`
+##### Rebuilding the base Docker image
+* `make rebuild`
+##### Resetting the local database
+* `make reset`
+### Hostnames for accessing the service directly
+* Local: http://127.0.0.1:8000
+## To run tests:
 
-Should you have any technical questions, please contact osvaldo@cornershopapp.com
-Title of the project: Backend-Test-(Last Name)
+* `pytest`
 
-## Description
+## Login for Nora
 
-The old process consists of a person (Nora) sending a text message via Whatsapp to all the chilean employees, the message contains today's menu with the different alternatives for lunch. 
+http://0.0.0.0:8000/login
 
-> Hello!  
-> I share with you today's menu :)
->
-> Option 1: Corn pie, Salad and Dessert  
-> Option 2: Chicken Nugget Rice, Salad and Dessert  
-> Option 3: Rice with hamburger, Salad and Dessert  
-> Option 4: Premium chicken Salad and Dessert.
->
-> Have a nice day!
+* username: nora
+* password: cornershop
 
-With the new system, Nora should be able to:
+### Considerations
+* For formatting purposes, I used `Black`
+* For sorting imports, I used `isort`
+* The timezone used is `TIME_ZONE = America/Santiago`
 
-- Create a menu for a specific date.
-- Send a Slack reminder with today's menu to all chilean employees (this process needs to be asynchronous and implemented by using Celery tasks).
 
-The employees should be able to:
+# Extra
+### Decisions
+* The home view is located in the menus app for simplicity. Another option for a more scalable system could have been to create an app only for the Meal Management System, that would contain the views and urls related to the system.
 
-- Choose their preferred meal (until 11 AM CLT).
-- Specify customizations (e.g. no tomatoes in the salad).
+### Modelling the Backend
+```
+class Menu(models.Model):
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    menu_date = models.DateTimeField(null=True, default=datetime.datetime.now(tzlocal())) 
 
-Nora should be the only user to be able to see what the Cornershop employees have requested, and to create and edit today's menu. The employees should be able to specify what they want for lunch but they shouldn't be able to see what others have requested. 
+class MenuOption(models.Model):
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+    menu = models.ForeignKey(
+        'Menu',
+        on_delete=models.CASCADE,
+    )
+    description = models.CharField(max_length=128)
 
-NOTE: The slack reminders must contain an URL to today's menu with the following pattern https://nora.cornershop.io/menu/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx (an UUID), this page must not require authentication of any kind. Don't worry about the nora.cornershop.io domain, it's just a placeholder, you can set that URL as an environment variable, or you can use the "sites" framework included in Django.
-
-## Aspects to be evaluated
-
-Since the system is very simple (yet powerful in terms of yumminess) we'll be evaluating, these aspects:
-
-- Functionality
-- Testing
-- Documentation
-- Software design
-- Programming style
-- Appropriate frameworks use
-
-## Aspects to be ignored
-
-- Visual design of the solution
-- Deployment of the solution
-
-## Restrictions
-
-- The usage of Django's admin interface is forbidden.
+class MenuSelection(models.Model):
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+	employee_firstname = models.CharField(max_length=128)
+    employee_lastname = models.CharField(max_length=128)
+	employee_id = models.IntegerField()
+    selection =  models.ForeignKey(MenuOption, on_delete=models.CASCADE)
+    extra_large = models.BooleanField(default=False) 
+    specification = models.CharField(max_length=128)
+```

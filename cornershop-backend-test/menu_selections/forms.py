@@ -18,9 +18,6 @@ class MenuSelectionModelForm(forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        print("Im here")
-        print(kwargs)
-        print("Im here")
         uuid = kwargs.pop("uuid")
         super(MenuSelectionModelForm, self).__init__(**kwargs)
         self.fields["selection"].queryset = MenuOption.objects.filter(menu__uuid=uuid)

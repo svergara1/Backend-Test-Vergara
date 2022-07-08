@@ -1,5 +1,6 @@
 import datetime
 import json
+from socket import timeout
 
 from celery import shared_task
 from django.conf import settings
