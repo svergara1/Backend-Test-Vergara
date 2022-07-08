@@ -3,6 +3,7 @@
 ### Assumptions
 
 * Nora is the only user that needs to be authenticated to the system.
+* Nora can only create one menu per day.
 * Nora con create as many menu options as she wants per Menu, as well as edit and delete them if necessary.
 * Nora can send the slack message with today's menus as many times as she wants to the employees slack channel.
 * Employees are not required to have an account in order to select a menu option.

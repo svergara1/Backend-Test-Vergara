@@ -2,6 +2,8 @@ import pytest
 from django.test import Client, TestCase
 from django.urls import reverse
 
+import freezegun
+
 from menu_selections.models import MenuSelection
 from menus.tests import baker_recipes as menu_recipes
 
@@ -11,6 +13,7 @@ class MenuSelectionViewTest(TestCase):
         self.client = Client()
 
     @pytest.mark.django_db
+    @freezegun.freeze_time("2022-01-05 10:59:00")
     def test_menu_selection_create_view(self):
         menu_option = menu_recipes.menuoption_arroz_carne.make()
         data = {

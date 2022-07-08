@@ -1,6 +1,8 @@
+import datetime
+
 from django import forms
 
-from .models import Menu, MenuOption
+from menus.models import Menu, MenuOption
 
 
 class DateInput(forms.DateInput):
@@ -14,6 +16,10 @@ class MenuModelForm(forms.ModelForm):
             "menu_date",
         ]
         widgets = {"menu_date": DateInput()}
+
+    def clean(self):
+        if Menu.objects.filter(menu_date=datetime.date.today()).exists():
+            raise forms.ValidationError("Today's menu is already created")
 
 
 class MenuOptionModelForm(forms.ModelForm):

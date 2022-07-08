@@ -46,7 +46,7 @@ def get_todays_menu() -> Menu:
     :raises MenuDoesNotExistException: Menu does not exist
     """
     try:
-        return Menu.objects.get(menu_date__gte=datetime.date.today())
+        return Menu.objects.get(menu_date=datetime.date.today())
     except Menu.DoesNotExist:
         return None
 

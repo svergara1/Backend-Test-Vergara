@@ -1,27 +1,26 @@
 import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    ListView,
-    UpdateView,
-)
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from menu_selections import services as menuselection_services
 from menus import services as menu_services
-
-from .forms import MenuModelForm, MenuOptionModelForm
-from .models import Menu, MenuOption
+from menus.forms import MenuModelForm, MenuOptionModelForm
+from menus.models import Menu, MenuOption
 
 
 class MenuCreateView(LoginRequiredMixin, CreateView):
     template_name = "menus/menu_create.html"
     form_class = MenuModelForm
     queryset = Menu.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        if Menu.objects.filter(menu_date=datetime.date.today()).exists():
+            return HttpResponseRedirect(reverse("home"))
+        return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
         return super().form_valid(form)
@@ -90,4 +89,4 @@ def home_view(request):
 
 def send_slack_message_view(request, uuid):
     menu_services.send_slack_message_to_employees(uuid)
-    return redirect("/")
+    return HttpResponseRedirect(reverse("home"))

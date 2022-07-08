@@ -4,10 +4,9 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import CreateView, DetailView, ListView
 
+from menu_selections.forms import MenuSelectionModelForm
+from menu_selections.models import MenuSelection
 from menus.models import Menu, MenuOption
-
-from .forms import MenuSelectionModelForm
-from .models import MenuSelection
 
 
 # Create your views here.

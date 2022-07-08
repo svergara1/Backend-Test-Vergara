@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (
+from menus.views import (
     MenuCreateView,
     MenuDetailView,
     MenuListView,
